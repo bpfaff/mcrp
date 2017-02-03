@@ -1,0 +1,14 @@
+Package: mcrp
+Title: Multiple criteria risk parity optimization
+Version: 0.0.0-1
+Authors@R: person("Bernhard", "Pfaff", email = "bernhard@pfaffikus.de", role = c("aut", "cre"))
+Description: Implementation of multiple criteria risk parity optimization with
+    respect to the portfolio's variance, skewness and kurtosis.
+Depends:
+    R (>= 3.3.2), methods, FRAPO
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Suggests:
+    testthat
+RoxygenNote: 5.0.1

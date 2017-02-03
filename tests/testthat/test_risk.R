@@ -1,0 +1,51 @@
+context("risk")
+library(mcrp)
+data(EuStockMarkets)
+r <- diff(log(EuStockMarkets)) * 100
+N <- ncol(r)
+w <- rep(1 / N, N) ## equal weight allocation
+
+test_that("Output of M2() equals cov()", {
+    a <- M2(r)
+    b <- cov(r)
+    expect_equal(dim(a), c(N, N))
+    expect_equal(a, b)
+})
+
+test_that("Portfolio variance is positive and scalar", {
+    a <- pm2(r, w)
+    b <- PortRisk(r, w)
+    expect_equal(a, b)
+    expect_equal(dim(a), NULL)
+    expect_identical(length(a), 1L)
+    expect_true(a > 0)
+})
+
+test_that("Partial derivatives of portfolio variance is matrix", {
+    a <- dm2(r, w)
+    b <- PortRiskDeriv(r, w)
+    expect_equal(a, b)
+    expect_true(is.matrix(a))
+    expect_equal(dim(a), c(N, 1))
+})
+
+test_that("Risk contributions sum to one or are equal to portfolio variance", {
+    a <- PortRiskContrib(r, w, percentage = TRUE)
+    expect_true(is.matrix(a))
+    expect_equal(dim(a), c(N, 1))
+    expect_equal(sum(a), 1.0)
+    b <- PortRiskContrib(r, w, percentage = FALSE)
+    pvar1 <- PortRisk(r, w)
+    expect_true(is.matrix(b))
+    expect_equal(dim(b), c(N, 1))
+    expect_equal(sum(b), pvar1)
+    d <- cm2(r, w, percentage = TRUE)
+    expect_true(is.matrix(d))
+    expect_equal(dim(d), c(N, 1))
+    expect_equal(sum(d), 1.0)
+    e <- cm2(r, w, percentage = FALSE)
+    pvar2 <- pm2(r, w)
+    expect_true(is.matrix(e))
+    expect_equal(dim(e), c(N, 1))
+    expect_equal(sum(e), pvar2)
+})
