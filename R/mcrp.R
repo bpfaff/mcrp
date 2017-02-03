@@ -26,8 +26,8 @@
 #' Boudt, K. and Peterson, B. and Croux, C. (2008/09), Estimation and decomposition of downside risk
 #' for portfolios with non-normal returns, \emph{The Journal of Risk}, \bold{11}(2), Winter 2008/09, 79--103.
 #'
-#' Jondeau, E. and Rockinger, M. (2006), Optimal portfolio allocation under higher moments, \
-#' emph{European Financial Management}, \bold{12}(1), 29--55.
+#' Jondeau, E. and Rockinger, M. (2006), Optimal portfolio allocation under higher moments,
+#' \emph{European Financial Management}, \bold{12}(1), 29--55.
 #'
 #' @examples
 #' data(EuStockMarkets)
