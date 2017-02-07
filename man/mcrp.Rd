@@ -16,7 +16,7 @@ mcrp(start, returns, lambda = c(1, 1, 1), ...)
 \item{...}{ellipsis argument, passed to \code{nlminb()}.}
 }
 \value{
-\code{list}
+Object of S4-class \code{\link[FRAPO]{PortSol-class}}.
 }
 \description{
 This function conducts a multiple criteria optimization with respect to the assets'
@@ -27,11 +27,11 @@ a higher moment. That is \code{lambda = c(1, NA, NA)} would conduct a pure ERC o
 with respect to the assets' contribution to the portfolio variance.
 }
 \examples{
-data(EuStockMarkets)
-r <- diff(log(EuStockMarkets)) * 100
+data(MultiAsset)
+MA <- as.timeSeries(MultiAsset[, 1:4])
+r <- na.omit(diff(log(MA)) * 100)
 N <- ncol(r)
-w <- rep(1 / N, N) ## start values
-erc <- mcrp(start = w, returns = r, lambda = c(1, NA, NA), lower = rep(0, N))
+erc <- mcrp(start = runif(N), returns = r, lambda = c(1, NA, NA), lower = rep(0, N))
 w <- Weights(erc)
 PortRiskContrib(r, w)
 
@@ -44,7 +44,7 @@ Extending the Risk Parity Approach to Higher Moments: Is there Any Value Added?,
 Boudt, K. and Peterson, B. and Croux, C. (2008/09), Estimation and decomposition of downside risk
 for portfolios with non-normal returns, \emph{The Journal of Risk}, \bold{11}(2), Winter 2008/09, 79--103.
 
-Jondeau, E. and Rockinger, M. (2006), Optimal portfolio allocation under higher moments, \
-emph{European Financial Management}, \bold{12}(1), 29--55.
+Jondeau, E. and Rockinger, M. (2006), Optimal portfolio allocation under higher moments,
+\emph{European Financial Management}, \bold{12}(1), 29--55.
 }
 

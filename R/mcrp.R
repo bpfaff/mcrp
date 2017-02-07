@@ -16,7 +16,7 @@
 #' @param lambda \code{numeric}, a \eqn{(3 x 1)} weight vector for the partial objectives.
 #' @param ... ellipsis argument, passed to \code{nlminb()}.
 #'
-#' @return \code{list}
+#' @return Object of S4-class \code{\link[FRAPO]{PortSol-class}}.
 #'
 #'
 #' @references Baitinger, E. and Dragosch, A. and Topalova, A. (2017),
@@ -30,26 +30,54 @@
 #' \emph{European Financial Management}, \bold{12}(1), 29--55.
 #'
 #' @examples
-#' data(EuStockMarkets)
-#' r <- diff(log(EuStockMarkets)) * 100
+#' data(MultiAsset)
+#' MA <- as.timeSeries(MultiAsset[, 1:4])
+#' r <- na.omit(diff(log(MA)) * 100)
 #' N <- ncol(r)
-#' w <- rep(1 / N, N) ## start values
-#' erc <- mcrp(start = w, returns = r, lambda = c(1, NA, NA), lower = rep(0, N))
+#' erc <- mcrp(start = runif(N), returns = r, lambda = c(1, NA, NA), lower = rep(0, N))
 #' w <- Weights(erc)
 #' PortRiskContrib(r, w)
 #'
 #' @export
 mcrp <- function(start, returns, lambda = c(1, 1, 1), ...){
-    f <- function(x, l = lambda, r = returns){
+    l <- lambda
+    r <- returns
+    me2 <- M2(r)
+    if (!is.na(l[2])) {
+        me3 <- M3(r)
+        }
+    if (!is.na(l[3])) {
+        me4 <- M4(r)
+        }
+    f <- function(x) {
+        prisk <- c(crossprod(x, me2) %*% x)
         ans <- 0
         if (!is.na(l[1])) {
-            ans <- ans + l[1] * stats::var(PortRiskContrib(r = r, w = x))
+            ctb <- 2 * x * me2 %*% x
+            pctb <- ctb / prisk
+            ans <- ans + l[1] * stats::var(pctb)
         }
         if (!is.na(l[2])) {
-            ans <- ans + l[2] * stats::var(PortSkewContrib(r = r, w = x))
+            pm3 <- c(crossprod(x, me3 %*% kronecker(x, x)))
+            pskew <- pm3 / (prisk ^ ( 3 / 2 ))
+            dm3 <- 3 * (me3 %*% kronecker(x, x))
+            term1 <- prisk ^ ( 3 / 2 ) * dm3
+            term2 <- 2 * pm3 * sqrt(prisk) * me2 %*% x
+            pderiv <- (term1 - term2) / prisk ^ 3
+            ctb <- x * pderiv
+            pctb <- ctb / pskew
+            ans <- ans + l[2] * stats::var(pctb)
         }
         if (!is.na(l[3])) {
-            ans <- ans + l[3] * stats::var(PortKurtContrib(r = r, w = x))
+            pm4 <- c(crossprod(x, me4) %*% kronecker(kronecker(x, x), x))
+            pkurt <- pm4 / prisk ^ 2
+            dm4 <- 4 * (me4 %*% kronecker(kronecker(x, x), x))
+            term1 <- prisk * dm4
+            term2 <- 2 * pm4 * me2 %*% x
+            pderiv <- (term1 - term2) / (2 * prisk ^ 3)
+            ctb <- x * pderiv
+            pctb <- ctb / pkurt
+            ans <- ans + l[3] * stats::var(pctb)
         }
         ans
     }
