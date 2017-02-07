@@ -43,8 +43,9 @@ and the contributions of the assets to skewness (\code{cm3()} and
 \code{PortSkewContrib()}).
 }
 \examples{
-data(EuStockMarkets)
-r <- diff(log(EuStockMarkets)) * 100
+data(MultiAsset)
+MA <- as.timeSeries(MultiAsset[, 1:4])
+r <- na.omit(diff(log(MA)) * 100)
 N <- ncol(r)
 w <- rep(1 / N, N) ## equal weight allocation
 M3(r)

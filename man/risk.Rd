@@ -42,8 +42,9 @@ the partial derivatives (\code{dm2()} and \code{PortRiskDeriv()}) and
 the risk contributions of the assets (\code{cm2()} and \code{PortRiskContrib()}).
 }
 \examples{
-data(EuStockMarkets)
-r <- diff(log(EuStockMarkets)) * 100
+data(MultiAsset)
+MA <- as.timeSeries(MultiAsset[, 1:4])
+r <- na.omit(diff(log(MA)) * 100)
 N <- ncol(r)
 w <- rep(1 / N, N) ## equal weight allocation
 M2(r)
@@ -51,9 +52,12 @@ pm2(r, w)
 dm2(r, w)
 }
 \references{
-Boudt, K. and Peterson, B. and Croux, C. (2008/09), Estimation and decomposition of downside risk for portfolios with non-normal returns, \emph{The Journal of Risk}, \bold{11}(2), Winter 2008/09, 79--103.
+Boudt, K. and Peterson, B. and Croux, C. (2008/09), Estimation and decomposition
+of downside risk for portfolios with non-normal returns,
+\emph{The Journal of Risk}, \bold{11}(2), Winter 2008/09, 79--103.
 
-Jondeau, E. and Rockinger, M. (2006), Optimal portfolio allocation under higher moments, \emph{European Financial Management}, \bold{12}(1), 29--55.
+Jondeau, E. and Rockinger, M. (2006), Optimal portfolio allocation under higher moments,
+\emph{European Financial Management}, \bold{12}(1), 29--55.
 }
 \seealso{
 Other res: \code{\link{kurt}}, \code{\link{skew}}
