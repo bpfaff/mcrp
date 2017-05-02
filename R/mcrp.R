@@ -53,8 +53,8 @@ mcrp <- function(start, returns, lambda = c(1, 1, 1), ...){
         prisk <- c(crossprod(x, me2) %*% x)
         ans <- 0
         if (!is.na(l[1])) {
-            ctb <- 2 * x * me2 %*% x
-            pctb <- ctb / prisk
+            ctb <- x * me2 %*% x
+            pctb <- ctb / (2 * prisk)
             ans <- ans + l[1] * stats::var(pctb)
         }
         if (!is.na(l[2])) {

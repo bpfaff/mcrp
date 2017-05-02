@@ -47,4 +47,3 @@ for portfolios with non-normal returns, \emph{The Journal of Risk}, \bold{11}(2)
 Jondeau, E. and Rockinger, M. (2006), Optimal portfolio allocation under higher moments,
 \emph{European Financial Management}, \bold{12}(1), 29--55.
 }
-
